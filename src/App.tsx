@@ -61,7 +61,8 @@ const App: React.FC = () => {
 
   return (
     <div className="App">
-      <h1>Upcoming MMA Events</h1>
+      <h1>Combat Calendar</h1>
+      <h2>Upcoming MMA Events</h2>
       <ul>
         {events.map((event) => (
           <li key={event.id}>
