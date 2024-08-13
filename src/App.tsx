@@ -1,28 +1,28 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
 
-interface Fighter {
+type Fighter = {
   name: string;
   record: string;
   country: string;
   picture: string;
   link: string;
-}
+};
 
-interface Fight {
+type Fight = {
   main: boolean;
   weight: string;
   fighterA: Fighter;
   fighterB: Fighter;
-}
+};
 
-interface Event {
+type Event = {
   id: string;
   title: string;
   date: string;
   link: string;
   fights: Fight[];
-}
+};
 
 const App: React.FC = () => {
   const [events, setEvents] = useState<Event[]>([]);
@@ -56,11 +56,11 @@ const App: React.FC = () => {
   }, []);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div>Loading event information...</div>;
   }
 
   return (
-    <div className="App">
+    <main className="App">
       <h1>Combat Calendar</h1>
       <h2>Upcoming MMA Events</h2>
       <ul>
@@ -74,10 +74,6 @@ const App: React.FC = () => {
             <ul>
               {event.fights.map((fight, index) => (
                 <li key={index}>
-                  <h3>
-                    {fight.weight} lbs -{" "}
-                    {fight.main ? "Main Event" : "Undercard"}
-                  </h3>
                   <div>
                     <strong>
                       {fight.fighterA.name} ({fight.fighterA.record})
@@ -87,13 +83,15 @@ const App: React.FC = () => {
                       {fight.fighterB.name} ({fight.fighterB.record})
                     </strong>
                   </div>
+                  <p>{fight.weight} lbs</p>
+                  <p>{fight.main ? "Main Event" : "Undercard"}</p>
                 </li>
               ))}
             </ul>
           </li>
         ))}
       </ul>
-    </div>
+    </main>
   );
 };
 
