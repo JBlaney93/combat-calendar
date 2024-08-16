@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import "./App.css";
 
 type Fighter = {
   name: string;
@@ -68,9 +67,6 @@ const App: React.FC = () => {
           <li key={event.id}>
             <h2>{event.title}</h2>
             <p>{event.date}</p>
-            <a href={event.link} target="_blank" rel="noopener noreferrer">
-              Event Link
-            </a>
             <ul>
               {event.fights.map((fight, index) => (
                 <li key={index}>
