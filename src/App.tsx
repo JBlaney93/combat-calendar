@@ -9,7 +9,7 @@ type Fighter = {
 };
 
 type Fight = {
-  main: boolean;
+  body: boolean;
   weight: string;
   fighterA: Fighter;
   fighterB: Fighter;
@@ -26,6 +26,11 @@ type Event = {
 const App: React.FC = () => {
   const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
+  const [open, setOPen] = useState(false);
+
+  const toggle = () => {
+    setOPen(!open);
+  };
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -58,36 +63,78 @@ const App: React.FC = () => {
     return <div>Loading event information...</div>;
   }
 
+  const weightClasses: { [key: string]: string } = {
+    "115": "Strawweight",
+    "125": "Flyweight",
+    "135": "Bantamweight",
+    "145": "Featherweight",
+    "155": "Lightweight",
+    "170": "Welterweight",
+    "185": "Middleweight",
+    "205": "Light Heavyweight",
+    "265": "Heavyweight",
+    "106": "Women's Strawweight",
+    "116": "Women's Flyweight",
+    "126": "Women's Bantamweight",
+    "146": "Women's Featherweight",
+  };
+
   return (
-    <main className="App">
-      <h1>Combat Calendar</h1>
-      <h2>Upcoming MMA Events</h2>
-      <ul>
-        {events.map((event) => (
-          <li key={event.id}>
-            <h2>{event.title}</h2>
-            <p>{event.date}</p>
-            <ul>
-              {event.fights.map((fight, index) => (
-                <li key={index}>
-                  <div>
-                    <strong>
-                      {fight.fighterA.name} ({fight.fighterA.record})
-                    </strong>
-                    <span> vs </span>
-                    <strong>
-                      {fight.fighterB.name} ({fight.fighterB.record})
-                    </strong>
-                  </div>
-                  <p>{fight.weight} lbs</p>
-                  <p>{fight.main ? "Main Event" : "Undercard"}</p>
-                </li>
-              ))}
-            </ul>
-          </li>
-        ))}
-      </ul>
-    </main>
+    <>
+      <nav className="w-full border-2">
+        <p className="py-6 text-4xl">Combat Calendar</p>
+      </nav>
+      <main className="py-4 flex flex-col gap-8 border-2">
+        <h1 className="text-5xl">Upcoming MMA Events</h1>
+        <ul className="flex flex-col gap-8">
+          {events.map((event) => (
+            <li
+              key={event.id}
+              className="border-black border-2 rounded-lg p-4 bg-sky-50"
+            >
+              <h2 className="text-4xl">{event.title}</h2>
+              <p>{event.date}</p>
+              <button onClick={toggle}>See fights</button>
+              {open && (
+                <ul>
+                  {event.fights.map((fight, index) => (
+                    <li key={index} className="border">
+                      <div className="flex gap-2 items-center justify-between ">
+                        <div className="flex flex-col">
+                          <span className="text-3xl">
+                            {fight.fighterA.name}
+                          </span>
+                          <strong> ({fight.fighterA.record})</strong>
+                        </div>
+
+                        <span> vs </span>
+
+                        <div className="flex flex-col items-end">
+                          <span className="text-3xl">
+                            {fight.fighterB.name}
+                          </span>
+                          <strong> ({fight.fighterB.record})</strong>
+                        </div>
+                      </div>
+
+                      <div className="flex ">
+                        <span>
+                          {weightClasses[fight.weight]
+                            ? weightClasses[fight.weight]
+                            : "Catchweight"}
+                        </span>
+                        <span> {fight.weight} lbs </span>
+                      </div>
+                      {/* <p>{fight.body ? "body Event" : "Undercard"}</p> */}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </li>
+          ))}
+        </ul>
+      </main>
+    </>
   );
 };
 
