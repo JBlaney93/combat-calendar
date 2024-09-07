@@ -79,11 +79,41 @@ const App: React.FC = () => {
     "185": "Middleweight",
     "205": "Light Heavyweight",
     "265": "Heavyweight",
-    "106": "Women's Strawweight",
-    "116": "Women's Flyweight",
-    "126": "Women's Bantamweight",
-    "146": "Women's Featherweight",
   };
+
+  const firstEvent = events
+    .map((event: Event) => {
+      if (event.id === events[0].id) {
+        return {
+          id: event.id,
+          title: event.title,
+          date: event.date,
+          link: event.link,
+          fights: event.fights.map((fight: Fight) => ({
+            body: fight.body,
+            weight: fight.weight,
+            fighterA: {
+              name: fight.fighterA.name,
+              record: fight.fighterA.record,
+              country: fight.fighterA.country,
+              picture: fight.fighterA.picture,
+              link: fight.fighterA.link,
+            },
+            fighterB: {
+              name: fight.fighterB.name,
+              record: fight.fighterB.record,
+              country: fight.fighterB.country,
+              picture: fight.fighterB.picture,
+              link: fight.fighterB.link,
+            },
+          })),
+        };
+      }
+      return null;
+    })
+    .filter((event) => event !== null)[0]; // Retrieve the first event object
+
+  console.log(firstEvent);
 
   return (
     <>
@@ -95,12 +125,39 @@ const App: React.FC = () => {
         <ul className="flex flex-col gap-8">
           <Accordion type="single" collapsible>
             <AccordionItem value="item-1">
-              <AccordionTrigger>Item 1</AccordionTrigger>
-              <AccordionContent>Content for item 1</AccordionContent>
-            </AccordionItem>
-            <AccordionItem value="item-2">
-              <AccordionTrigger>Item 2</AccordionTrigger>
-              <AccordionContent>Content for item 2</AccordionContent>
+              <AccordionTrigger>
+                {firstEvent.title} {firstEvent.fights[0].fighterB.name} vs{" "}
+                {firstEvent.fights[0].fighterA.name}
+              </AccordionTrigger>
+              <AccordionContent>
+                {firstEvent.fights.map((fight, index) => (
+                  <li key={index} className="border">
+                    <div className="flex gap-2 items-center justify-between ">
+                      <div className="flex flex-col">
+                        <span className="text-3xl">{fight.fighterA.name}</span>
+                        <strong> ({fight.fighterA.record})</strong>
+                      </div>
+
+                      <span> vs </span>
+
+                      <div className="flex flex-col items-end">
+                        <span className="text-3xl">{fight.fighterB.name}</span>
+                        <strong> ({fight.fighterB.record})</strong>
+                      </div>
+                    </div>
+
+                    <div className="flex ">
+                      <span>
+                        {weightClasses[fight.weight]
+                          ? weightClasses[fight.weight]
+                          : "Catchweight"}
+                      </span>
+                      <span> {fight.weight} lbs </span>
+                    </div>
+                    {/* <p>{fight.body ? "body Event" : "Undercard"}</p> */}
+                  </li>
+                ))}
+              </AccordionContent>
             </AccordionItem>
           </Accordion>
 
