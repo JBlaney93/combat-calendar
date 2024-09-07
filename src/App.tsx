@@ -1,4 +1,10 @@
 import React, { useEffect, useState } from "react";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 type Fighter = {
   name: string;
@@ -87,6 +93,63 @@ const App: React.FC = () => {
       <main className="py-4 flex flex-col gap-8 border-2">
         <h1 className="text-5xl">Upcoming MMA Events</h1>
         <ul className="flex flex-col gap-8">
+          <Accordion type="single" collapsible>
+            <AccordionItem value="item-1">
+              <AccordionTrigger>Item 1</AccordionTrigger>
+              <AccordionContent>Content for item 1</AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="item-2">
+              <AccordionTrigger>Item 2</AccordionTrigger>
+              <AccordionContent>Content for item 2</AccordionContent>
+            </AccordionItem>
+          </Accordion>
+
+          {events.map((event) => (
+            <li
+              key={event.id}
+              className="border-black border-2 rounded-lg p-4 bg-sky-50"
+            >
+              <h2 className="text-4xl">{event.title}</h2>
+              <p>{event.date}</p>
+              <button onClick={toggle}>See fights</button>
+              {open && (
+                <ul>
+                  {event.fights.map((fight, index) => (
+                    <li key={index} className="border">
+                      <div className="flex gap-2 items-center justify-between ">
+                        <div className="flex flex-col">
+                          <span className="text-3xl">
+                            {fight.fighterA.name}
+                          </span>
+                          <strong> ({fight.fighterA.record})</strong>
+                        </div>
+
+                        <span> vs </span>
+
+                        <div className="flex flex-col items-end">
+                          <span className="text-3xl">
+                            {fight.fighterB.name}
+                          </span>
+                          <strong> ({fight.fighterB.record})</strong>
+                        </div>
+                      </div>
+
+                      <div className="flex ">
+                        <span>
+                          {weightClasses[fight.weight]
+                            ? weightClasses[fight.weight]
+                            : "Catchweight"}
+                        </span>
+                        <span> {fight.weight} lbs </span>
+                      </div>
+                      {/* <p>{fight.body ? "body Event" : "Undercard"}</p> */}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </li>
+          ))}
+
           {events.map((event) => (
             <li
               key={event.id}
