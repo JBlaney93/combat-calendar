@@ -1,4 +1,10 @@
 import React, { useEffect, useState } from "react";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 type Fighter = {
   name: string;
@@ -73,10 +79,6 @@ const App: React.FC = () => {
     "185": "Middleweight",
     "205": "Light Heavyweight",
     "265": "Heavyweight",
-    "106": "Women's Strawweight",
-    "116": "Women's Flyweight",
-    "126": "Women's Bantamweight",
-    "146": "Women's Featherweight",
   };
 
   return (
@@ -86,17 +88,21 @@ const App: React.FC = () => {
       </nav>
       <main className="py-4 flex flex-col gap-8 border-2">
         <h1 className="text-5xl">Upcoming MMA Events</h1>
-        <ul className="flex flex-col gap-8">
+        <ul className="flex flex-col gap-8 ">
           {events.map((event) => (
-            <li
-              key={event.id}
-              className="border-black border-2 rounded-lg p-4 bg-sky-50"
-            >
-              <h2 className="text-4xl">{event.title}</h2>
-              <p>{event.date}</p>
-              <button onClick={toggle}>See fights</button>
-              {open && (
-                <ul>
+            <Accordion type="single" collapsible>
+              <AccordionItem value="item-1">
+                <AccordionTrigger>
+                  <div className="flex flex-col items-start">
+                    <p>{event.date}</p>
+                    <h2 className="text-4xl">{event.title}</h2>
+                    <h3 className="text-3xl">
+                      {event.fights[0].fighterA.name} vs{" "}
+                      {event.fights[0].fighterB.name}
+                    </h3>
+                  </div>
+                </AccordionTrigger>
+                <AccordionContent>
                   {event.fights.map((fight, index) => (
                     <li key={index} className="border">
                       <div className="flex gap-2 items-center justify-between ">
@@ -128,9 +134,9 @@ const App: React.FC = () => {
                       {/* <p>{fight.body ? "body Event" : "Undercard"}</p> */}
                     </li>
                   ))}
-                </ul>
-              )}
-            </li>
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
           ))}
         </ul>
       </main>
