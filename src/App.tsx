@@ -5,38 +5,12 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-
-type Fighter = {
-  name: string;
-  record: string;
-  country: string;
-  picture: string;
-  link: string;
-};
-
-type Fight = {
-  body: boolean;
-  weight: string;
-  fighterA: Fighter;
-  fighterB: Fighter;
-};
-
-type Event = {
-  id: string;
-  title: string;
-  date: string;
-  link: string;
-  fights: Fight[];
-};
+import { Event } from "./models/Event";
+import { weightClasses } from "./models/WeightClasses";
 
 const App: React.FC = () => {
   const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
-  const [open, setOPen] = useState(false);
-
-  const toggle = () => {
-    setOPen(!open);
-  };
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -69,78 +43,75 @@ const App: React.FC = () => {
     return <div>Loading event information...</div>;
   }
 
-  const weightClasses: { [key: string]: string } = {
-    "115": "Strawweight",
-    "125": "Flyweight",
-    "135": "Bantamweight",
-    "145": "Featherweight",
-    "155": "Lightweight",
-    "170": "Welterweight",
-    "185": "Middleweight",
-    "205": "Light Heavyweight",
-    "265": "Heavyweight",
-  };
-
   return (
-    <>
-      <nav className="w-full border-2">
-        <p className="py-6 text-4xl">Combat Calendar</p>
-      </nav>
-      <main className="py-4 flex flex-col gap-8 border-2">
-        <h1 className="text-5xl">Upcoming MMA Events</h1>
-        <ul className="flex flex-col gap-8 ">
-          {events.map((event) => (
-            <Accordion type="single" collapsible>
-              <AccordionItem value="item-1">
-                <AccordionTrigger>
-                  <div className="flex flex-col items-start">
-                    <p>{event.date}</p>
-                    <h2 className="text-4xl">{event.title}</h2>
-                    <h3 className="text-3xl">
-                      {event.fights[0].fighterA.name} vs{" "}
-                      {event.fights[0].fighterB.name}
-                    </h3>
-                  </div>
-                </AccordionTrigger>
-                <AccordionContent>
+    <main className="py-4 flex flex-col gap-8 max-w-2xl mx-auto">
+      <div className="flex flex-col gap-2 items-center">
+        <h1 className="text-5xl">Combat Calendar</h1>
+        <p className="text-xl text-center">
+          A one stop list of upcoming MMA events from all the major promotions.
+        </p>
+        <p>More features coming soon.</p>
+      </div>
+      <ul className="flex flex-col gap-8">
+        {events.map((event) => (
+          <Accordion
+            type="single"
+            collapsible
+            className="bg-slate-50 rounded-lg"
+          >
+            <AccordionItem value={event.title}>
+              <AccordionTrigger className="bg-slate-50 rounded-lg hover:no-underline">
+                <div className="flex flex-col items-center w-full">
+                  <p>{event.date}</p>
+                  <h2 className="text-4xl">{event.title}</h2>
+                  <h3 className="text-3xl">
+                    {event.fights[0].fighterA.name} vs{" "}
+                    {event.fights[0].fighterB.name}
+                  </h3>
+                </div>
+              </AccordionTrigger>
+              <AccordionContent className="pb-0">
+                <ol className="flex flex-col">
                   {event.fights.map((fight, index) => (
-                    <li key={index} className="border">
-                      <div className="flex gap-2 items-center justify-between ">
-                        <div className="flex flex-col">
-                          <span className="text-3xl">
-                            {fight.fighterA.name}
-                          </span>
-                          <strong> ({fight.fighterA.record})</strong>
+                    <div>
+                      {index === 0 && (
+                        <div className="flex gap-2 justify-center py-1 bg-red-600 text-white">
+                          MAIN EVENT
                         </div>
-
-                        <span> vs </span>
-
-                        <div className="flex flex-col items-end">
-                          <span className="text-3xl">
-                            {fight.fighterB.name}
-                          </span>
-                          <strong> ({fight.fighterB.record})</strong>
-                        </div>
-                      </div>
-
-                      <div className="flex ">
+                      )}
+                      <div className="flex gap-2 justify-center py-1 bg-slate-700 text-white">
                         <span>
                           {weightClasses[fight.weight]
                             ? weightClasses[fight.weight]
                             : "Catchweight"}
                         </span>
-                        <span> {fight.weight} lbs </span>
+                        <span>{fight.weight}lbs</span>
                       </div>
-                      {/* <p>{fight.body ? "body Event" : "Undercard"}</p> */}
-                    </li>
+                      <li key={index} className="px-5 pb-5">
+                        <div className="flex gap-2 items-center justify-between ">
+                          <div className="flex flex-col max-w-[50%]">
+                            <span className="text-3xl">
+                              {fight.fighterA.name}
+                            </span>
+                            <strong> ({fight.fighterA.record})</strong>
+                          </div>
+                          <div className="flex flex-col max-w-[50%] text-right">
+                            <span className="text-3xl">
+                              {fight.fighterB.name}
+                            </span>
+                            <strong> ({fight.fighterB.record})</strong>
+                          </div>
+                        </div>
+                      </li>
+                    </div>
                   ))}
-                </AccordionContent>
-              </AccordionItem>
-            </Accordion>
-          ))}
-        </ul>
-      </main>
-    </>
+                </ol>
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
+        ))}
+      </ul>
+    </main>
   );
 };
 
